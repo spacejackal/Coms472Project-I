@@ -2,6 +2,28 @@ import numpy as np
 from typing import List, Tuple, Optional
 import scipy
 
+def AStar(grid, start, end):
+    rows, cols = len(grid), len(grid[0])
+    explored = []
+    frontier = [start]
+    visited = set()
+    parent = {start: None}
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+    while true:
+        min = (0,0)
+        weight = infinity
+        for node in frontier:
+            for dir in directions:
+                if dir not in frontier and dir not in explored:
+                    
+
+        
+
+
+
+
+    
+
 def dfs(grid, start, end):
     """A DFS example"""
     rows, cols = len(grid), len(grid[0])
