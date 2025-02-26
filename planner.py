@@ -10,10 +10,18 @@ def AStar(grid, start, end):
     parent = {start: None}
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
     weight = 1
+    minWeight = float("inf")
+    nextNode = None
     while true:
         for node in frontier:
             for dir in directions:
-                
+                x, y = node[0] + dir[0], node[1] + dir[1]
+                if 0 <= x < rows and 0 <= y < cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored:
+                    weight = 1 + hurst((x,y), end)
+                    if weight < minWeight:
+                        minWeight = weight
+                        nextNode = (x,y)
+
 
 
         
