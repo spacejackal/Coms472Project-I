@@ -10,25 +10,10 @@ def AStar(grid, start, end):
     parent = {start: None}
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
     weight = 1
-    while frontier:
-        frontier.sort(key=lambda x: weight * (abs(x[0] - end[0]) + abs(x[1] - end[1])))
-        x, y = frontier.pop(0)
-        if (x, y) == end:
-            path = []
-            while (x, y) is not None:
-                path.append((x, y))
-                if parent[(x, y)] is None:
-                    break
-                x, y = parent[(x, y)]
-            return path[::-1]
-        if (x, y) in visited:
-            continue
-        visited.add((x, y))
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            if 0 <= nx < rows and 0 <= ny < cols and grid[nx][ny] == 0 and (nx, ny) not in visited:
-                frontier.append((nx, ny))
-                parent[(nx, ny)] = (x, y)
+    while true:
+        for node in frontier:
+            for dir in directions:
+                
 
 
         
@@ -100,3 +85,6 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
     path = dfs(world_list, start, end)
 
     return np.array(path) if path else None
+
+def hurst(current, end):
+    return abs((current[0] - end[0]) + (current[1] - end[1]))
