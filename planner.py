@@ -1,5 +1,6 @@
 import numpy as np
 from typing import List, Tuple, Optional
+import matplotlib.pyplot as plt
 import scipy
 
 def AStar(grid, start, end):
@@ -12,15 +13,17 @@ def AStar(grid, start, end):
     weight = 1
     minWeight = float("inf")
     nextNode = None
-    while true:
+    while True:
         for node in frontier:
             for dir in directions:
                 x, y = node[0] + dir[0], node[1] + dir[1]
-                if 0 <= x < rows and 0 <= y < cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored:
-                    weight = 1 + hurst((x,y), end)
+                if 0 <= x <= rows and 0 <= y <= cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored and (x,y) not in frontier:
+                    weight = 1 + abs((x - end[0])) + abs((y - end[1]))
                     if weight < minWeight:
                         minWeight = weight
                         nextNode = (x,y)
+        print("moving to next node: ", nextNode)
+        print("frontier: ", frontier)
         frontier.append(nextNode)
         parent[nextNode] = node
         if nextNode == end:
@@ -100,9 +103,11 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
     world_list: List[List[int]] = world.tolist()
 
     # Perform DFS pathfinding and return the result as a numpy array
-    path = dfs(world_list, start, end)
+    #path = dfs(world_list, start, end)
+    path = AStar(world_list, start, end)
 
     return np.array(path) if path else None
 
 def hurst(current, end):
-    return abs((current[0] - end[0]) + (current[1] - end[1]))
+    temp = abs((current[0] - end[0])) + abs((current[1] - end[1]))
+    return temp
