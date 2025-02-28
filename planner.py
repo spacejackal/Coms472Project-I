@@ -21,6 +21,16 @@ def AStar(grid, start, end):
                     if weight < minWeight:
                         minWeight = weight
                         nextNode = (x,y)
+        frontier.append(nextNode)
+        parent[nextNode] = node
+        if nextNode == end:
+            path = []
+            while (x, y) is not None:
+                path.append((x, y))
+                if parent[(x, y)] is None:
+                    break
+                x, y = parent[(x, y)]
+            return path[::-1]
 
 
 
