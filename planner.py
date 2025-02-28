@@ -15,24 +15,29 @@ def AStar(grid, start, end):
     nextNode = None
     while True:
         for node in frontier:
+            minWeight = float("inf")
+            nextNode = None
+            bourder = False
             for dir in directions:
                 x, y = node[0] + dir[0], node[1] + dir[1]
-                if 0 <= x <= rows and 0 <= y <= cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored and (x,y) not in frontier:
+                if 0 <= x < rows and 0 <= y < cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored and (x,y) not in frontier:
                     weight = 1 + abs((x - end[0])) + abs((y - end[1]))
+                    bourder = True
                     if weight < minWeight:
                         minWeight = weight
                         nextNode = (x,y)
-        print("moving to next node: ", nextNode)
-        print("frontier: ", frontier)
+            if bourder == False:
+                explored.append(node)
+                frontier.remove(node)
         frontier.append(nextNode)
         parent[nextNode] = node
         if nextNode == end:
             path = []
-            while (x, y) is not None:
-                path.append((x, y))
-                if parent[(x, y)] is None:
+            while nextNode is not None:
+                path.append(nextNode)
+                if parent[nextNode] is None:
                     break
-                x, y = parent[(x, y)]
+                nextNode = parent[nextNode]
             return path[::-1]
 
 
