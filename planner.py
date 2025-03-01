@@ -9,6 +9,7 @@ def AStar(grid, start, end):
     frontier = [start]
     visited = set()
     parent = {start: None}
+    cumluativeWeight = {start: 0}
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
     weight = 1
     minWeight = float("inf")
@@ -21,7 +22,10 @@ def AStar(grid, start, end):
             for dir in directions:
                 x, y = node[0] + dir[0], node[1] + dir[1]
                 if 0 <= x < rows and 0 <= y < cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored and (x,y) not in frontier:
-                    weight = 1 + abs((x - end[0])) + abs((y - end[1])) + parent[(x,y)].weight
+                    if parent[node] is not None:
+                        weight = 1 + abs((x - end[0])) + abs((y - end[1])) + cumluativeWeight[parent[node]]
+                    else:
+                        weight = 1 + abs((x - end[0])) + abs((y - end[1]))
                     bourder = True
                     if weight < minWeight:
                         minWeight = weight
@@ -30,6 +34,7 @@ def AStar(grid, start, end):
                 explored.append(node)
                 frontier.remove(node)
         frontier.append(nextNode)
+        cumluativeWeight[nextNode] = minWeight
         parent[nextNode] = node
         if nextNode == end:
             path = []
