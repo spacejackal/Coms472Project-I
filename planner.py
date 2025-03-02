@@ -34,7 +34,7 @@ def AStar(grid, start, end):
                 explored.append(node)
                 frontier.remove(node)
         frontier.append(nextNode)
-        cumluativeWeight[nextNode] = minWeight
+        cumluativeWeight[nextNode] = cumluativeWeight[node] + 1
         parent[nextNode] = node
         if nextNode == end:
             path = []
