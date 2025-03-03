@@ -44,9 +44,56 @@ def AStar(grid, start, end):
                     break
                 nextNode = parent[nextNode]
             return path[::-1]
+        
 
 
+def AnotherStar(grid, start, end):
+    rows, cols = len(grid), len(grid[0])
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+    
+    pathWeight = {start: 0}
+    parent = {start: None}
+    open = []
+    open.append(start)
+    
+    found = False
+    while len(open) > 0 and not found:
+        #pop least from open
+        node = None
+        for i in range(0, len(open)):
+            if node is None or pathWeight[open[i]] <= pathWeight[node]:
+                node = open[i] 
+        open.remove(node)
 
+        #add neighbors to open
+        for dir in directions:
+            newNode = (node[0] + dir[0], node[1] + dir[1])
+            distToGoal = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
+            if 0 <= newNode[0] < rows and 0 <= newNode[1] < cols and grid[newNode[0]][newNode[1]] == 0 and newNode not in list(pathWeight.keys()):
+                open.append(newNode)
+                parent[newNode] = node
+                if distToGoal[0] > distToGoal[1]:
+                    pathWeight[newNode] = 1 + pathWeight[node] + (distToGoal[0] - distToGoal[1]) + (1.4 * distToGoal[1])
+                else:
+                    pathWeight[newNode] = 1 + pathWeight[node] + (distToGoal[1] - distToGoal[0]) + (1.4 * distToGoal[0])
+
+                if newNode == end:
+                    found = True
+                    break
+
+
+    if found:
+        path = []
+        parentNode = end
+        while parentNode is not None:
+            path.append(parentNode)
+            if parent[parentNode] is None:
+                break
+            parentNode = parent[parentNode]
+        return path[::-1]
+
+                
+    return None
         
 
 
@@ -114,7 +161,7 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
 
     # Perform DFS pathfinding and return the result as a numpy array
     #path = dfs(world_list, start, end)
-    path = AStar(world_list, start, end)
+    path = AnotherStar(world_list, start, end)
 
     return np.array(path) if path else None
 
