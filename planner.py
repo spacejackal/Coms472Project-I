@@ -1,3 +1,4 @@
+import math
 import numpy as np
 from typing import List, Tuple, Optional
 import matplotlib.pyplot as plt
@@ -66,9 +67,11 @@ def AnotherAnotherStar(grid, start, end):
 
         for dir in directions:
             newNode = (node[0] + dir[0], node[1] + dir[1])
-            distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
+            #distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
+            distToEnd = (hurst(newNode, end))
             if 0 <= newNode[0] < rows and 0 <= newNode[1] < cols and grid[newNode[0]][newNode[1]] == 0 and newNode not in list(pathWeight.keys()):
-                    pathWeight[newNode] = 1 + pathWeight[node] + distToEnd[0] + distToEnd[1]
+                    #pathWeight[newNode] = 1 + pathWeight[node] + distToEnd[0] + distToEnd[1]
+                    pathWeight[newNode] = 1 + pathWeight[node] + distToEnd
                     parent[newNode] = node
                     open.append(newNode)
                     if newNode == end:
@@ -157,5 +160,5 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
     return np.array(path) if path else None
 
 def hurst(current, end):
-    temp = abs((current[0] - end[0])) + abs((current[1] - end[1]))
-    return temp
+    temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2)
+    return math.sqrt(temp)
