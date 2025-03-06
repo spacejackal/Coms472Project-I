@@ -1,4 +1,4 @@
-import math
+
 import numpy as np
 from typing import List, Tuple, Optional
 import matplotlib.pyplot as plt
@@ -161,4 +161,4 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
 
 def hurst(current, end):
     temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2)
-    return math.sqrt(temp)
+    return temp^0.5
