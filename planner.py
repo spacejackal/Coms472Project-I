@@ -3,7 +3,7 @@ from typing import List, Tuple, Optional
 import matplotlib.pyplot as plt
 import scipy
      
-#authers of anotheranotherstar: Jacob leary, Seth Leon
+#authors of anotheranotherstar: Jacob leary, Seth Leon
 def AnotherAnotherStar(grid, start, end):
     rows, cols = len(grid), len(grid[0])
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
