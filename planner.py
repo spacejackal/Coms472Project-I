@@ -211,4 +211,4 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
 
 def hurst(current, end):
     temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2)
-    return temp^0.5
+    return temp**0.5
