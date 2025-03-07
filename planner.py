@@ -4,46 +4,46 @@ import matplotlib.pyplot as plt
 import scipy
      
 
-# def AnotherAnotherStar(grid, start, end):
-#     rows, cols = len(grid), len(grid[0])
-#     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
-#     pathWeight = {start: 0}
-#     parent = {start: None}
+def AnotherAnotherStar(grid, start, end):
+    rows, cols = len(grid), len(grid[0])
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+    pathWeight = {start: 0}
+    parent = {start: None}
 
-#     open = [start]
+    open = [start]
 
-#     found = False
-#     while not found and len(open) > 0:
-#         node = None
-#         for newNode in open:
-#             if node is None or pathWeight[newNode] <= pathWeight[node]:
-#                 node = newNode
+    found = False
+    while not found and len(open) > 0:
+        node = None
+        for newNode in open:
+            if node is None or pathWeight[newNode] <= pathWeight[node]:
+                node = newNode
         
-#         open.remove(node)
+        open.remove(node)
 
-#         for dir in directions:
-#             newNode = (node[0] + dir[0], node[1] + dir[1])
-#             #distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
-#             distToEnd = (hurst(newNode, end))
-#             if 0 <= newNode[0] < rows and 0 <= newNode[1] < cols and grid[newNode[0]][newNode[1]] == 0 and newNode not in list(pathWeight.keys()):
-#                     #pathWeight[newNode] = 1 + pathWeight[node] + distToEnd[0] + distToEnd[1]
-#                     pathWeight[newNode] = 1 + pathWeight[node] + distToEnd
-#                     parent[newNode] = node
-#                     open.append(newNode)
-#                     if newNode == end:
-#                         found = True
-#                         break
+        for dir in directions:
+            newNode = (node[0] + dir[0], node[1] + dir[1])
+            #distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
+            distToEnd = (hurst(newNode, end))
+            if 0 <= newNode[0] < rows and 0 <= newNode[1] < cols and grid[newNode[0]][newNode[1]] == 0 and newNode not in list(pathWeight.keys()):
+                    #pathWeight[newNode] = 1 + pathWeight[node] + distToEnd[0] + distToEnd[1]
+                    pathWeight[newNode] = 1 + pathWeight[node] + distToEnd
+                    parent[newNode] = node
+                    open.append(newNode)
+                    if newNode == end:
+                        found = True
+                        break
 
-#     if found:
-#             path = []
-#             parentNode = end
-#             while parentNode is not None:
-#                 path.append(parentNode)
-#                 if parent[parentNode] is None:
-#                     break
-#                 parentNode = parent[parentNode]
-#             return path[::-1]
-#     return None
+    if found:
+            path = []
+            parentNode = end
+            while parentNode is not None:
+                path.append(parentNode)
+                if parent[parentNode] is None:
+                    break
+                parentNode = parent[parentNode]
+            return path[::-1]
+    return None
     
 
 def AnotherStar(grid, start, end):
@@ -161,9 +161,11 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
     # Perform DFS pathfinding and return the result as a numpy array
     #path = dfs(world_list, start, end)
     path = AnotherAnotherStar(world_list, start, end)
+    ##print(len(path))
     #path = AnotherStar(world_list, start, end)
     #path = AnotherAnotherStar(world_list, start, end)
-    path = AnotherStar(world_list, start, end)
+    ##path = AnotherStar(world_list, start, end)
+    ##print(len(path))
 
     return np.array(path) if path else None
 
