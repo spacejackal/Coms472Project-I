@@ -3,50 +3,7 @@ import numpy as np
 from typing import List, Tuple, Optional
 import matplotlib.pyplot as plt
 import scipy
-
-def AStar(grid, start, end):
-    rows, cols = len(grid), len(grid[0])
-    explored = []
-    frontier = [start]
-    visited = set()
-    parent = {start: None}
-    cumluativeWeight = {start: 0}
-    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
-    weight = 1
-    minWeight = float("inf")
-    nextNode = None
-    while True:
-        for node in frontier:
-            minWeight = float("inf")
-            nextNode = None
-            bourder = False
-            for dir in directions:
-                x, y = node[0] + dir[0], node[1] + dir[1]
-                if 0 <= x < rows and 0 <= y < cols and grid[x][y] == 0 and (x, y) not in visited and (x,y) not in explored and (x,y) not in frontier:
-                    cumluativeWeight[(x,y)] = 1 + cumluativeWeight[node] + abs((x - end[0])) + abs((y - end[1]))
-                    #if parent[node] is not None:
-                        #weight = 1 + abs((x - end[0])) + abs((y - end[1])) + cumluativeWeight[parent[node]]
-                    #else:
-                     #   weight = 1 + abs((x - end[0])) + abs((y - end[1]))
-                    bourder = True
-                    if weight < minWeight:
-                        minWeight = weight
-                        nextNode = (x,y)
-            if bourder == False:
-                explored.append(node)
-                frontier.remove(node)
-        frontier.append(nextNode)
-        cumluativeWeight[nextNode] = cumluativeWeight[node] + 1
-        parent[nextNode] = node
-        if nextNode == end:
-            path = []
-            while nextNode is not None:
-                path.append(nextNode)
-                if parent[nextNode] is None:
-                    break
-                nextNode = parent[nextNode]
-            return path[::-1]
-        
+     
 
 def AnotherAnotherStar(grid, start, end):
     rows, cols = len(grid), len(grid[0])
@@ -205,7 +162,7 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
     # Perform DFS pathfinding and return the result as a numpy array
     #path = dfs(world_list, start, end)
     path = AnotherAnotherStar(world_list, start, end)
-    path = AnotherStar(world_list, start, end)
+    #path = AnotherStar(world_list, start, end)
 
     return np.array(path) if path else None
 
