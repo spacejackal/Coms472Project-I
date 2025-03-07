@@ -49,7 +49,6 @@ def AnotherAnotherStar(grid, start, end):
 def AnotherStar(grid, start, end):
     rows, cols = len(grid), len(grid[0])
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
-    
     pathWeight = {start: 0}
     parent = {start: None}
     open = []
