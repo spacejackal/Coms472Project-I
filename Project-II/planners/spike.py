@@ -82,6 +82,9 @@ def hurst(current, end, pursuer):
     temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2) **0.5
     temp2 = abs((current[0] - pursuer[0])^2) + abs((current[1] - pursuer[1])^2) **0.5
 
+    if temp2 == 0:
+        return 9999999999999999
+
     return ((1/temp2) *temp)
 
 
@@ -111,19 +114,28 @@ class PlannerAgent:
         directions = np.array([[0,0], [-1, 0], [1, 0], [0, -1], [0, 1],
                                    [-1, -1], [-1, 1], [1, -1], [1, 1]]) 
           
-        # Ensure start and end positions are tuples of integers
-        start = (int(current[0]), int(current[1]))
-        end = (int(pursued[0]), int(pursued[1]))
+        target = pursued
+        pursued_plan = AnotherAnotherStar(world, pursued, pursuer, current)
+        
+        for i in range(len(pursued_plan)):
+            if dist(pursued_plan[i], current)<dist(target, current):
+                target = pursued_plan[i]
+            if pursued_plan[i] == current:
+                target = pursued_plan[0]
+                break
 
-        # Convert the numpy array to a list of lists for compatibility with the example DFS function
-        world_list: List[List[int]] = world.tolist()
 
-        # Perform DFS pathfinding and return the result as a numpy array
-        path = dfs(world_list, start, end)
+        our_plan = AnotherAnotherStar(world, current, target, pursuer)
 
-        try:
-            return np.array(path)[1]-current
-        except:
-            return directions[np.random.choice(9)]
+        act = our_plan[0] - current
+
+
+        
+        return act
+    
+def dist(current, end):
+    temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2) **0.5
+    return (temp)
+    
 
 
