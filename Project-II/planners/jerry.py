@@ -92,9 +92,7 @@ class PlannerAgent:
         pass
 
     def plan_action(self, world: np.ndarray, current: Tuple[int, int], pursued: Tuple[int, int], pursuer: Tuple[int, int]) -> Optional[np.ndarray]:
-        """
-        Uses Monte Carlo Tree Search to compute the next move.
-        """
+        
         root = MCTSNode((current, pursued, pursuer))
         for _ in range(100):  # Number of simulations
             node = self._select(root)
@@ -125,9 +123,9 @@ class PlannerAgent:
             possible_moves = node.get_possible_moves()
             move = random.choice(possible_moves)
             state = self._apply_move(state, move)
-            if state[0] == state[1]:  # Reached the pursued
+            if np.array_equal(state[0],state[1]):  # Reached the pursued
                 return 1.0  # Reward for catching the pursued
-            if state[0] == state[2]:  # Caught by the pursuer
+            if np.array_equal(state[0],state[2]):  # Caught by the pursuer
                 return -1.0  # Penalty for being caught
         return 0.0  # Neutral outcome
 
