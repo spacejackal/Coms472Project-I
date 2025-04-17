@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import scipy
      
 #authors of anotheranotherstar: Jacob leary, Seth Leon
-def AnotherAnotherStar(grid, start, end):
+def AnotherAnotherStar(grid, start, end, avoid):
     rows, cols = len(grid), len(grid[0])
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
     pathWeight = {start: 0}
@@ -24,7 +24,7 @@ def AnotherAnotherStar(grid, start, end):
         for dir in directions:
             newNode = (node[0] + dir[0], node[1] + dir[1])
             #distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
-            distToEnd = (hurst(newNode, end))
+            distToEnd = (hurst(newNode, end,avoid))
             if 0 <= newNode[0] < rows and 0 <= newNode[1] < cols and grid[newNode[0]][newNode[1]] == 0 and newNode not in list(pathWeight.keys()):
                     #pathWeight[newNode] = 1 + pathWeight[node] + distToEnd[0] + distToEnd[1]
                     pathWeight[newNode] = 1 + pathWeight[node] + distToEnd
@@ -168,6 +168,8 @@ def plan_path(world: np.ndarray, start: Tuple[int, int], end: Tuple[int, int]) -
 
     return np.array(path) if path else None
 
-def hurst(current, end):
-    temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2)
-    return temp**0.5
+def hurst(current, end, pursuer):
+    temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2) **0.5
+    temp2 = abs((current[0] - pursuer[0])^2) + abs((current[1] - pursuer[1])^2) **0.5
+
+    return ((1/temp2) *temp)
