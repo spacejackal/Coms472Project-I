@@ -120,10 +120,11 @@ def AnotherAnotherStar(grid, start, end, avoid):
         for dir in directions:
             newNode = (node[0] + dir[0], node[1] + dir[1])
             #distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
-            distToEnd = (hurst(newNode, end,avoid))
+            #distToEnd = (hurst(newNode, end,avoid))
             if 0 <= newNode[0] < rows and 0 <= newNode[1] < cols and grid[newNode[0]][newNode[1]] == 0 and newNode not in list(pathWeight.keys()):
                     #pathWeight[newNode] = 1 + pathWeight[node] + distToEnd[0] + distToEnd[1]
-                    pathWeight[newNode] = 1 + pathWeight[node] + distToEnd
+                    #pathWeight[newNode] = 1 + pathWeight[node] + distToEnd
+                    pathWeight[newNode] = hurst(newNode, end,avoid) + pathWeight[node] + dist(start, end)
                     parent[newNode] = node
                     open.append(newNode)
                     if newNode == end:
@@ -186,11 +187,13 @@ class PlannerAgent:
             pursued_plan = AnotherAnotherStar(world, temp2, temp3, temp)
 
             for i in range(len(pursued_plan)):
-                if dist(pursued_plan[i], current)<dist(target, current):
-                    target = pursued_plan[i]
-                if pursued_plan[i] == temp:
-                    target = pursued_plan[0]
+                if i == 0:
+                    continue  
+                elif pursued_plan[i] == temp:
+                    target = pursued_plan[1]
                     break
+                elif dist(pursued_plan[i], current)<dist(target, current):
+                    target = pursued_plan[i]
 
 
             our_plan = AnotherAnotherStar(world, temp, temp2, temp3)
