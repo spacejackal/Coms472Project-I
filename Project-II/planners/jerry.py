@@ -19,6 +19,16 @@ class MimiNode:
         self.children = []
         self.value = 0
         self.mover = mover
+
+
+def best_action(root: MimiNode) -> Optional[np.ndarray]:
+        """
+        Returns the best action from the root node of the minimax tree.
+        """
+        if not root.children:
+            return None
+        best_child = min(root.children, key=lambda x: x.value)
+        return best_child.current - root.current
         
 def hurst(current, end, pursuer):
     temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2) **0.5
@@ -77,6 +87,7 @@ class PlannerAgent:
     def __init__(self):
         pass
     
+
     def plan_action(self, world: np.ndarray, current: np.ndarray, pursued: np.ndarray, pursuer: np.ndarray) -> Optional[np.ndarray]:
         """
         Computes a action to take from the current position caputure the pursued while evading from the pursuer
@@ -102,6 +113,7 @@ class PlannerAgent:
 
 
         minimini = miniminimini(world, current, pursued, pursuer, 10)
-        act = minimini.children[0].current - current
+        #act = minimini.children[0].current - current
+        act = best_action(minimini)
         return act
 

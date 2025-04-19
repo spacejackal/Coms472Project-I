@@ -20,6 +20,15 @@ class MimiNode:
         self.value = 0
         self.mover = mover
 
+def best_action(root: MimiNode) -> Optional[np.ndarray]:
+        """
+        Returns the best action from the root node of the minimini tree.
+        """
+        if not root.children:
+            return None
+        best_child = min(root.children, key=lambda x: x.value)
+        return best_child.current - root.current
+
 def miniminimini(world, current, pursued, pursuer, maxdepth):
     root = MimiNode(current, pursued, pursuer)
     rows, cols = len(world), len(world[0])
@@ -172,7 +181,8 @@ class PlannerAgent:
             return act
         else:
             minimini = miniminimini(world, current, pursued, pursuer, 3)
-            act = minimini.children[0].current - current
+            #act = minimini.children[0].current - current
+            act = best_action(minimini)
             return act
     
 def dist(current, end):

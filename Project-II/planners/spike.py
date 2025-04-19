@@ -124,7 +124,6 @@ class PlannerAgent:
                 target = pursued_plan[0]
                 break
 
-
         our_plan = AnotherAnotherStar(world, tuple(current), tuple(target), tuple(pursuer))
 
         act = our_plan[1] - current
