@@ -31,7 +31,7 @@ def select_valid_locations(grid, num_points=3, min_distance=3):
 class Task:
     """Base class of a task"""
     def __init__(self, id, running_id,
-                 max_iter=1000):
+                 max_iter=100):
         self.id = id
         self.running_id = running_id
         self.max_iter = max_iter

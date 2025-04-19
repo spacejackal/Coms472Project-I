@@ -115,19 +115,19 @@ class PlannerAgent:
                                    [-1, -1], [-1, 1], [1, -1], [1, 1]]) 
           
         target = pursued
-        pursued_plan = AnotherAnotherStar(world, pursued, pursuer, current)
+        pursued_plan = AnotherAnotherStar(world, tuple(pursued), tuple(pursuer), tuple(current))
         
         for i in range(len(pursued_plan)):
             if dist(pursued_plan[i], current)<dist(target, current):
                 target = pursued_plan[i]
-            if pursued_plan[i] == current:
+            if pursued_plan[i] == tuple(current):
                 target = pursued_plan[0]
                 break
 
 
-        our_plan = AnotherAnotherStar(world, current, target, pursuer)
+        our_plan = AnotherAnotherStar(world, tuple(current), tuple(target), tuple(pursuer))
 
-        act = our_plan[0] - current
+        act = our_plan[1] - current
 
 
         

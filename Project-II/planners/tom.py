@@ -72,6 +72,7 @@ def miniminimini(world, current, pursued, pursuer, maxdepth):
 def AnotherAnotherStar(grid, start, end, avoid):
     rows, cols = len(grid), len(grid[0])
     directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1), (0,0)]
+    
     pathWeight = {start: 0}
     parent = {start: None}
 
@@ -149,19 +150,22 @@ class PlannerAgent:
         target = pursued
 
         if dist(current, target) > 3:
-            pursued_plan = AnotherAnotherStar(world, pursued, pursuer, current)
+            temp = tuple(current)
+            temp2 = tuple(pursued)
+            temp3 = tuple(pursuer)
+            pursued_plan = AnotherAnotherStar(world, temp2, temp3, temp)
 
             for i in range(len(pursued_plan)):
                 if dist(pursued_plan[i], current)<dist(target, current):
                     target = pursued_plan[i]
-                if pursued_plan[i] == current:
+                if pursued_plan[i] == temp:
                     target = pursued_plan[0]
                     break
 
 
-            our_plan = AnotherAnotherStar(world, current, target, pursuer)
+            our_plan = AnotherAnotherStar(world, temp, temp2, temp3)
 
-            act = our_plan[0] - current
+            act = our_plan[1] - current
 
 
 
