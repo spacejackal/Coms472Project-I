@@ -29,7 +29,7 @@ def best_action(root: MimiNode):
         bestMove = None
         bestValue = float('inf')
         for child in root.children:
-            if child.value < bestValue and child.current - root.current != (0,0):
+            if child.value < bestValue and tuple(child.current - root.current) != (0,0):
                 bestValue = child.value
                 bestMove = child.current - root.current
 
@@ -74,10 +74,8 @@ def miniminimini(world, current, pursued, pursuer, maxdepth):
                     newNode.value = hurst(newNode.pursuer, newNode.current, newNode.pursued)
                     if(tuple(newNode.current) == tuple(newNode.pursuer)):
                         newNode.value = 9999999999999999
-                        tempNode = newNode
-                        while tempNode.parent is not None:
-                            tempNode.value = 9999999999999999
-                            tempNode = tempNode.parent
+                        newNode.parent.value = 9999999999999999
+                        newNode.parent.parent.value = 9999999999999999
                         
                     #if(pursuer_action is None or newNode.value < pursuer_action.value):
                     pursuer_action = newNode
