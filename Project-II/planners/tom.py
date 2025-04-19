@@ -20,14 +20,21 @@ class MimiNode:
         self.value = 0
         self.mover = mover
 
-def best_action(root: MimiNode) -> Optional[np.ndarray]:
+def best_action(root: MimiNode):
         """
         Returns the best action from the root node of the minimini tree.
         """
         if not root.children:
             return None
-        best_child = min(root.children, key=lambda x: x.value)
-        return best_child.current - root.current
+        bestMove = None
+        bestValue = float('inf')
+        for child in root.children:
+            if child.value < bestValue and child.current - root.current != (0,0):
+                bestValue = child.value
+                bestMove = child.current - root.current
+
+        #best_child = min(root.children, key=lambda x: x.value)
+        return bestMove
 
 def miniminimini(world, current, pursued, pursuer, maxdepth):
     root = MimiNode(current, pursued, pursuer)
@@ -43,37 +50,51 @@ def miniminimini(world, current, pursued, pursuer, maxdepth):
             #distToEnd = (abs(newNode[0] - end[0]), abs(newNode[1] - end[1]))
             if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
                 newNode.value = hurst(newNode.current, newNode.pursued, newNode.pursuer)
-                if(our_action is None or newNode.value < our_action.value):
-                    our_action = newNode
+                #if(our_action is None or newNode.value < our_action.value):
+                our_action = newNode
             if(our_action is not None):
                 node.children.append(our_action)
 
         pursued_action = None
-        for dir in directions:
-            newNode = MimiNode(our_action.current, our_action.pursued+dir, our_action.pursuer, depth, our_action)
-            if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
-                newNode.value = hurst(newNode.pursued, newNode.pursuer, newNode.current)
-                if(pursued_action is None or newNode.value < pursued_action.value):
+        for ourAction in node.children:
+            for dir in directions:
+                newNode = MimiNode(ourAction.current, ourAction.pursued+dir, ourAction.pursuer, depth, ourAction)
+                if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
+                    newNode.value = hurst(newNode.pursued, newNode.pursuer, newNode.current)
+                    #if(pursued_action is None or newNode.value < pursued_action.value):
                     pursued_action = newNode
-            if(pursued_action is not None):
-                our_action.children.append(pursued_action)
+                if(pursued_action is not None):
+                    ourAction.children.append(pursued_action)
 
         pursuer_action = None
-        for dir in directions:
-            newNode = MimiNode(pursued_action.current, pursued_action.pursued, pursued_action.pursuer+dir, depth, pursued_action)
-            if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
-                newNode.value = hurst(newNode.pursuer, newNode.current, newNode.pursued)
-                if(pursuer_action is None or newNode.value < pursuer_action.value):
+        for pursuedAction in our_action.children:
+            for dir in directions:
+                newNode = MimiNode(pursuedAction.current, pursuedAction.pursued, pursuedAction.pursuer+dir, depth, pursuedAction)
+                if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
+                    newNode.value = hurst(newNode.pursuer, newNode.current, newNode.pursued)
+                    if(tuple(newNode.current) == tuple(newNode.pursuer)):
+                        newNode.value = 9999999999999999
+                        tempNode = newNode
+                        while tempNode.parent is not None:
+                            tempNode.value = 9999999999999999
+                            tempNode = tempNode.parent
+                        
+                    #if(pursuer_action is None or newNode.value < pursuer_action.value):
                     pursuer_action = newNode
-            if(pursuer_action is not None):
-                pursued_action.children.append(pursuer_action)
+                if(pursuer_action is not None):
+                    pursuedAction.children.append(pursuer_action)
         depth += 1
         node = pursuer_action
+
+    #backValue(root)
 
     return root
 
             
-
+def backValue(node: MimiNode):
+    if node is None:
+        return 0
+    
 
 
 
