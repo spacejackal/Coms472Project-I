@@ -112,6 +112,7 @@ def Anotherminiminimini(world, current, pursued, pursuer, maxdepth):
                             if 0 <= newNode3.pursuer[0] < rows and 0 <= newNode3.pursuer[1] < cols and world[newNode3.pursuer[0]][newNode3.pursuer[1]] == 0:
                                 newNode2.children.append(newNode3)
                                 newNode3.value = hurst(newNode3.pursuer, newNode3.current, newNode3.pursued)
+                                
                                 if newNode2.bestChild == None or newNode2.bestChild.value > newNode3.value:
                                     newNode2.bestChild = newNode3
                         newNode2.value = hurst(newNode2.bestChild.pursued, newNode2.bestChild.pursuer, newNode2.bestChild.current)
@@ -146,15 +147,29 @@ def AnotherAnotherminiminimini(world, current, pursued, pursuer, maxdepth):
                         newNode.children.append(newNode2)
                         for dir in directions:
                             newNode3 = MimiNode(newNode2.current, newNode2.pursued, newNode2.pursuer+dir, depth, newNode2)
-                            if 0 <= newNode3.pursuer[0] < rows and 0 <= newNode3.pursuer[1] < cols and world[newNode3.pursuer[0]][newNode3.pursuer[1]] == 0:
+                            if 0 <= newNode3.pursuer[0] < rows and 0 <= newNode3.pursuer[1] < cols and world[newNode3.pursuer[0]][newNode3.pursuer[1]] == 0 :
                                 newNode2.children.append(newNode3)
-                                newNode3.value = len(AnotherAnotherStar(world, newNode3.pursuer, newNode3.current, newNode3.pursued))
+                                node3AStar = AnotherAnotherStar(world, tuple(newNode3.pursuer), tuple(newNode3.current), tuple(newNode3.pursued))
+                                if node3AStar is not None:
+                                    newNode3.value = len(node3AStar)
+                                else:
+                                    newNode3.value = 9999999999999999
                                 if newNode2.bestChild == None or newNode2.bestChild.value > newNode3.value:
                                     newNode2.bestChild = newNode3
-                        newNode2.value = len(AnotherAnotherStar(world, newNode2.bestChild.pursued, newNode2.bestChild.pursuer, newNode2.bestChild.current))
+                        node2Astar = AnotherAnotherStar(world, tuple(newNode2.bestChild.pursued), tuple(newNode2.bestChild.pursuer), tuple(newNode2.bestChild.current))
+                        if node2Astar is not None:
+                            newNode2.value = len(node2Astar)
+                        else:
+                            newNode2.value = 9999999999999999
+                        #newNode2.value = len(AnotherAnotherStar(world, tuple(newNode2.bestChild.pursued), tuple(newNode2.bestChild.pursuer), tuple(newNode2.bestChild.current)))
                         if newNode.bestChild == None or newNode.bestChild.value > newNode2.value:
                                     newNode.bestChild = newNode2
-                newNode.value = len(AnotherAnotherStar(world, newNode.bestChild.bestChild.current, newNode.bestChild.bestChild.pursued, newNode.bestChild.bestChild.pursuer))
+                nodeAstar = AnotherAnotherStar(world, tuple(newNode.bestChild.bestChild.current), tuple(newNode.bestChild.bestChild.pursued), tuple(newNode.bestChild.bestChild.pursuer))
+                if nodeAstar is not None:
+                    newNode.value = len(nodeAstar)
+                else:
+                    newNode.value = 9999999999999999
+                #newNode.value = len(AnotherAnotherStar(world, tuple(newNode.bestChild.bestChild.current), tuple(newNode.bestChild.bestChild.pursued), tuple(newNode.bestChild.bestChild.pursuer)))
                 if node.bestChild == None or node.bestChild.value > newNode.value:
                             node.bestChild = newNode
 
@@ -234,11 +249,14 @@ def AnotherAnotherStar(grid, start, end, avoid):
     return None
 
 def hurst(current, end, pursuer):
+    if tuple(current) == tuple(pursuer):
+        return 9999999999999999
     temp = abs((current[0] - end[0])^2) + abs((current[1] - end[1])^2) **0.5
     temp2 = abs((current[0] - pursuer[0])^2) + abs((current[1] - pursuer[1])^2) **0.5
 
     if temp2 == 0:
         return 9999999999999999
+
 
     return ((1/temp2) *temp)
 
@@ -271,7 +289,7 @@ class PlannerAgent:
           
         target = pursued
 
-        if dist(current, target) > 3:
+        if dist(current, target) > 1.5 and dist(current, pursuer) > 1.5:
             temp = tuple(current)
             temp2 = tuple(pursued)
             temp3 = tuple(pursuer)
