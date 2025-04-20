@@ -8,6 +8,7 @@ class MimiNode:
     mover = -1
     depth = 0
     parent = None
+    bestChild = None
     children = []
     value = 0
     def __init__(self, current=None, pursued=None, pursuer=None, depth=0, parent=None, mover=-1):
@@ -87,6 +88,98 @@ def miniminimini(world, current, pursued, pursuer, maxdepth):
     #backValue(root)
 
     return root
+
+
+
+def Anotherminiminimini(world, current, pursued, pursuer, maxdepth):
+    root = MimiNode(current, pursued, pursuer)
+    rows, cols = len(world), len(world[0])
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1), (0,0)]
+    depth = 0
+    node = root
+    while depth <= maxdepth:
+
+        for dir in directions:
+            newNode = MimiNode(node.current + dir, node.pursued, node.pursuer, depth, node)
+            if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
+                node.children.append(newNode)
+                for dir in directions:
+                    newNode2 = MimiNode(newNode.current, newNode.pursued+dir, newNode.pursuer, depth, newNode)
+                    if 0 <= newNode2.pursued[0] < rows and 0 <= newNode2.pursued[1] < cols and world[newNode2.pursued[0]][newNode2.pursued[1]] == 0:
+                        newNode.children.append(newNode2)
+                        for dir in directions:
+                            newNode3 = MimiNode(newNode2.current, newNode2.pursued, newNode2.pursuer+dir, depth, newNode2)
+                            if 0 <= newNode3.pursuer[0] < rows and 0 <= newNode3.pursuer[1] < cols and world[newNode3.pursuer[0]][newNode3.pursuer[1]] == 0:
+                                newNode2.children.append(newNode3)
+                                newNode3.value = hurst(newNode3.pursuer, newNode3.current, newNode3.pursued)
+                                if newNode2.bestChild == None or newNode2.bestChild.value > newNode3.value:
+                                    newNode2.bestChild = newNode3
+                        newNode2.value = hurst(newNode2.bestChild.pursued, newNode2.bestChild.pursuer, newNode2.bestChild.current)
+                        if newNode.bestChild == None or newNode.bestChild.value > newNode2.value:
+                                    newNode.bestChild = newNode2
+                newNode.value = hurst(newNode.bestChild.bestChild.current, newNode.bestChild.bestChild.pursued, newNode.bestChild.bestChild.pursuer)
+                if node.bestChild == None or node.bestChild.value > newNode.value:
+                            node.bestChild = newNode
+
+        depth += 1
+        node =  node.bestChild.bestChild.bestChild
+
+    #backValue(root)
+
+    return root
+
+def AnotherAnotherminiminimini(world, current, pursued, pursuer, maxdepth):
+    root = MimiNode(current, pursued, pursuer)
+    rows, cols = len(world), len(world[0])
+    directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1), (0,0)]
+    depth = 0
+    node = root
+    while depth <= maxdepth:
+
+        for dir in directions:
+            newNode = MimiNode(node.current + dir, node.pursued, node.pursuer, depth, node)
+            if 0 <= newNode.current[0] < rows and 0 <= newNode.current[1] < cols and world[newNode.current[0]][newNode.current[1]] == 0:
+                node.children.append(newNode)
+                for dir in directions:
+                    newNode2 = MimiNode(newNode.current, newNode.pursued+dir, newNode.pursuer, depth, newNode)
+                    if 0 <= newNode2.pursued[0] < rows and 0 <= newNode2.pursued[1] < cols and world[newNode2.pursued[0]][newNode2.pursued[1]] == 0:
+                        newNode.children.append(newNode2)
+                        for dir in directions:
+                            newNode3 = MimiNode(newNode2.current, newNode2.pursued, newNode2.pursuer+dir, depth, newNode2)
+                            if 0 <= newNode3.pursuer[0] < rows and 0 <= newNode3.pursuer[1] < cols and world[newNode3.pursuer[0]][newNode3.pursuer[1]] == 0:
+                                newNode2.children.append(newNode3)
+                                newNode3.value = len(AnotherAnotherStar(world, newNode3.pursuer, newNode3.current, newNode3.pursued))
+                                if newNode2.bestChild == None or newNode2.bestChild.value > newNode3.value:
+                                    newNode2.bestChild = newNode3
+                        newNode2.value = len(AnotherAnotherStar(world, newNode2.bestChild.pursued, newNode2.bestChild.pursuer, newNode2.bestChild.current))
+                        if newNode.bestChild == None or newNode.bestChild.value > newNode2.value:
+                                    newNode.bestChild = newNode2
+                newNode.value = len(AnotherAnotherStar(world, newNode.bestChild.bestChild.current, newNode.bestChild.bestChild.pursued, newNode.bestChild.bestChild.pursuer))
+                if node.bestChild == None or node.bestChild.value > newNode.value:
+                            node.bestChild = newNode
+
+        depth += 1
+        node =  node.bestChild.bestChild.bestChild
+
+    #backValue(root)
+
+    return root
+
+def getNodeVal(node:MimiNode, i):
+    if not node.children:
+        if(i%3 == 0):
+            return hurst(node.current, node.pursued, node.pursuer)
+        elif(i%3 == 1):
+            return hurst(node.pursued, node.pursuer, node.current)
+        else:
+            return hurst(node.pursuer, node.current, node.pursued)
+    
+    if(i%3 == 0):
+        return hurst(node.current, node.pursued, node.pursuer)
+    elif(i%3 == 1):
+        return hurst(node.pursued, node.pursuer, node.current)
+    else:
+        return hurst(node.pursuer, node.current, node.pursued)
 
             
 def backValue(node: MimiNode):
@@ -202,9 +295,9 @@ class PlannerAgent:
 
             return act
         else:
-            minimini = miniminimini(world, current, pursued, pursuer, 3)
+            minimini = Anotherminiminimini(world, current, pursued, pursuer, 1)
             #act = minimini.children[0].current - current
-            act = best_action(minimini)
+            act = minimini.bestChild.current - minimini.current
             return act
     
 def dist(current, end):
