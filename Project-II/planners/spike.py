@@ -129,7 +129,8 @@ class PlannerAgent:
             
 
         our_plan = AnotherAnotherStar(world, tuple(current), tuple(target), tuple(pursuer))
-
+        if our_plan is None:
+            return np.array([0,0])
         act = our_plan[1] - current
 
 
